@@ -57,6 +57,32 @@ function preload() {
               gameState.enemies.create(50 * xVol, 50 * yVol, 'bug1').setScale(.6).setGravityY(-200);
           };
       };
+
+      const pellets = this.physics.add.group();
+      function genPellet(){
+        let randomBug = Phaser.Utils.Array.GetRandom(gameState.enemies.getChildren());
+        pellets.create(randomBug.x, randomBug.y, 'bugPellet'); 
+      };
+
+      gameState.pelletsLoop = this.time.addEvent(
+          {
+              callback: genPellet,
+              delay: 300,
+              callbackScope: this,
+              loop: true,
+          }
+      );
+      
+      this.physics.add.collider(pellets, platforms, (pellets) =>{
+        pellets.destroy();
+      });
+
+      this.physics.add.collider(pellets, gameState.player, () =>{
+        gameState.active = false;
+        gameState.pelletsLoop.destroy();
+        this.physics.pause();
+        this.add.text(200, 250, 'You Lose', {fontSize:'15px', fill:'#000000'});
+      });
       
   }
   
