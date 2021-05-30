@@ -83,6 +83,14 @@ function preload() {
         this.physics.pause();
         this.add.text(200, 250, 'You Lose', {fontSize:'15px', fill:'#000000'});
       });
+
+      gameState.bugRepellent = this.physics.add.group();
+      this.physics.add.collider(gameState.enemies, gameState.bugRepellent, (bug, repellent)=>{
+          bug.destroy();
+          repellent.destroy();
+          gameState.scoreText.setText(`Bugs Left: ${numOfTotalEnemies()}`);
+      })
+
       
   }
   
@@ -100,7 +108,7 @@ function preload() {
   
           // Execute code if the spacebar key is pressed
           if (Phaser.Input.Keyboard.JustDown(gameState.cursors.space)) {
-              
+              gameState.bugRepellent.create(gameState.player.x, gameState.player.y, 'bugRepellent').setGravityY(-400);
           }
   
           // Add logic for winning condition and enemy movements below:
