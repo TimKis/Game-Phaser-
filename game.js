@@ -89,8 +89,9 @@ function preload() {
           bug.destroy();
           repellent.destroy();
           gameState.scoreText.setText(`Bugs Left: ${numOfTotalEnemies()}`);
-      })
+      });
 
+    gameState.enemyVelosity = 1;
       
   }
   
@@ -112,7 +113,17 @@ function preload() {
           }
   
           // Add logic for winning condition and enemy movements below:
-      
+          if (numOfTotalEnemies() === 0){
+            gameState.active = false;
+            this.physics.pause();
+            this.add.text(200, 250, 'You win!', {fontSize: '15px', fill:'#000000'});
+          }else {
+              gameState.enemies.getChildren().forEach(bug => {
+                bug.x += gameState.enemyVelosity;
+              });
+              gameState.leftMostBug = sortedEnemies()[0];
+              gameState.rightMostBug = sortedEnemies()[sortedEnemies.length - 1];
+          }; 
     }
   }
   
