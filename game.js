@@ -80,6 +80,7 @@ function preload() {
       this.physics.add.collider(pellets, gameState.player, () =>{
         gameState.active = false;
         gameState.pelletsLoop.destroy();
+        gameState.enemyVelocity = 1;
         this.physics.pause();
         this.add.text(200, 250, 'You Lose', {fontSize:'15px', fill:'#000000'});
       });
@@ -91,7 +92,15 @@ function preload() {
           gameState.scoreText.setText(`Bugs Left: ${numOfTotalEnemies()}`);
       });
 
-    gameState.enemyVelosity = 1;
+    gameState.enemyVelocity = 1;
+    
+    this.physics.add.collider(gameState.enemies, gameState.player, ()=>{
+        gameState.active = false;
+        gameState.enemyVelocity = 1;
+        this.physics.pause();
+        gameState.player.destroy();
+        this.add.text(200, 250, 'You Lose', {fontSize:'15px', fill:'#000000'});
+    });
       
   }
   
@@ -115,14 +124,21 @@ function preload() {
           // Add logic for winning condition and enemy movements below:
           if (numOfTotalEnemies() === 0){
             gameState.active = false;
+            gameState.enemyVelocity = 1;
             this.physics.pause();
             this.add.text(200, 250, 'You win!', {fontSize: '15px', fill:'#000000'});
           }else {
               gameState.enemies.getChildren().forEach(bug => {
-                bug.x += gameState.enemyVelosity;
+                bug.x += gameState.enemyVelocity;
               });
               gameState.leftMostBug = sortedEnemies()[0];
-              gameState.rightMostBug = sortedEnemies()[sortedEnemies.length - 1];
+              gameState.rightMostBug = sortedEnemies()[sortedEnemies().length - 1];
+              if(gameState.leftMostBug.x < 10 || gameState.rightMostBug.x > 440){
+                gameState.enemyVelocity *= -1;
+                gameState.enemies.getChildren().forEach(bug => {
+                    bug.y += 10;
+                })
+              }
           }; 
     }
   }
