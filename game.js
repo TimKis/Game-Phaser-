@@ -20,6 +20,19 @@ function preload() {
     return totalEnemies;
   }
   
+  function createBug() {
+    const randomNum = Math.floor(Math.random()* 3);
+    let bugName;
+    if (randomNum === 0){
+        bugName = 'bug1';
+    }else if (randomNum === 1){
+        bugName = 'bug2';
+    }else{
+        bugName = 'bug3';
+    }
+    return bugName;
+  };
+  
   const gameState = {};
   
   function create() {
@@ -54,7 +67,7 @@ function preload() {
       gameState.enemies = this.physics.add.group();
       for(let yVol = 1; yVol < 4; yVol++){
           for(let xVol = 1; xVol < 9; xVol++){
-              gameState.enemies.create(50 * xVol, 50 * yVol, 'bug1').setScale(.6).setGravityY(-200);
+              gameState.enemies.create(50 * xVol, 50 * yVol, createBug()).setScale(.6).setGravityY(-200);
           };
       };
 
