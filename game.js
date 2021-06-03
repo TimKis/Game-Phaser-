@@ -95,14 +95,23 @@ function preload() {
         gameState.pelletsLoop.destroy();
         gameState.enemyVelocity = 1;
         this.physics.pause();
+        this.add.text(200, 265, `Your score is: ${table}`,{fontSize:'15px', fill:'#000000'});
         this.add.text(200, 250, 'You Lose', {fontSize:'15px', fill:'#000000'});
       });
 
+      let table = 0;
       gameState.bugRepellent = this.physics.add.group();
       this.physics.add.collider(gameState.enemies, gameState.bugRepellent, (bug, repellent)=>{
           bug.destroy();
           repellent.destroy();
           gameState.scoreText.setText(`Bugs Left: ${numOfTotalEnemies()}`);
+          if(bug.texture.key === 'bug1'){
+            return table += 3;
+          }else if(bug.texture.key === 'bug2'){
+            return table += 5;
+          }else{
+            return table += 8;
+            };
       });
 
     gameState.enemyVelocity = 1;
@@ -112,6 +121,7 @@ function preload() {
         gameState.enemyVelocity = 1;
         this.physics.pause();
         gameState.player.destroy();
+        this.add.text(200, 265, `Your score is: ${table}`,{fontSize:'15px', fill:'#000000'});
         this.add.text(200, 250, 'You Lose', {fontSize:'15px', fill:'#000000'});
     });
       
@@ -139,6 +149,7 @@ function preload() {
             gameState.active = false;
             gameState.enemyVelocity = 1;
             this.physics.pause();
+            this.add.text(200, 265, `Your score is: ${table}`,{fontSize:'15px', fill:'#000000'});
             this.add.text(200, 250, 'You win!', {fontSize: '15px', fill:'#000000'});
           }else {
               gameState.enemies.getChildren().forEach(bug => {
