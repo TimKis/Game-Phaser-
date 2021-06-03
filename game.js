@@ -161,6 +161,9 @@ function preload() {
                 gameState.enemyVelocity *= -1;
                 gameState.enemies.getChildren().forEach(bug => {
                     bug.y += 10;
+                    if (numOfTotalEnemies() < 10){
+                      bug.y += 15;
+                    }
                 })
               }
           }; 
