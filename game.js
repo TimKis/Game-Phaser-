@@ -1,4 +1,14 @@
   const gameState = {};
+
+  class StartScene extends Phaser.Scene {
+    constructor(){
+      super({key:'StartScene'});
+    }
+
+    create(){
+      this.add.text(150, 250, 'Let the Game begin', {fontSize: '15px', fill: '#000000'});
+    }
+  };
   
 
   class GameScene extends Phaser.Scene {
