@@ -1,41 +1,22 @@
-function preload() {
-    this.load.image('bug1', 'https://content.codecademy.com/courses/learn-phaser/Bug%20Invaders/bug_1.png');
-    this.load.image('bug2', 'https://content.codecademy.com/courses/learn-phaser/Bug%20Invaders/bug_2.png');
-    this.load.image('bug3', 'https://content.codecademy.com/courses/learn-phaser/Bug%20Invaders/bug_3.png');
-    this.load.image('platform', 'https://content.codecademy.com/courses/learn-phaser/physics/platform.png');
-    this.load.image('codey', 'https://content.codecademy.com/courses/learn-phaser/Bug%20Invaders/codey.png');
-    this.load.image('bugPellet', 'https://content.codecademy.com/courses/learn-phaser/Bug%20Invaders/bugPellet.png');
-    this.load.image('bugRepellent', 'https://content.codecademy.com/courses/learn-phaser/Bug%20Invaders/bugRepellent.png');
-  }
-  
-  // Helper Methods below:
-  // sortedEnemies() returns an array of enemy sprites sorted by their x coordinate
-  function sortedEnemies(){
-    const orderedByXCoord = gameState.enemies.getChildren().sort((a, b) => a.x - b.x);
-    return orderedByXCoord;
-  }
-  // numOfTotalEnemies() returns the number of total enemies 
-  function numOfTotalEnemies() {
-      const totalEnemies = gameState.enemies.getChildren().length;
-    return totalEnemies;
-  }
-  
-  function createBug() {
-    const randomNum = Math.floor(Math.random()* 3);
-    let bugName;
-    if (randomNum === 0){
-        bugName = 'bug1';
-    }else if (randomNum === 1){
-        bugName = 'bug2';
-    }else{
-        bugName = 'bug3';
-    }
-    return bugName;
-  };
-  
   const gameState = {};
   
-  function create() {
+
+  class GameScene extends Phaser.Scene {
+    constructor(){
+      super({key: 'GameScene'});
+    }
+
+    preload() {
+      this.load.image('bug1', 'https://content.codecademy.com/courses/learn-phaser/Bug%20Invaders/bug_1.png');
+      this.load.image('bug2', 'https://content.codecademy.com/courses/learn-phaser/Bug%20Invaders/bug_2.png');
+      this.load.image('bug3', 'https://content.codecademy.com/courses/learn-phaser/Bug%20Invaders/bug_3.png');
+      this.load.image('platform', 'https://content.codecademy.com/courses/learn-phaser/physics/platform.png');
+      this.load.image('codey', 'https://content.codecademy.com/courses/learn-phaser/Bug%20Invaders/codey.png');
+      this.load.image('bugPellet', 'https://content.codecademy.com/courses/learn-phaser/Bug%20Invaders/bugPellet.png');
+      this.load.image('bugRepellent', 'https://content.codecademy.com/courses/learn-phaser/Bug%20Invaders/bugRepellent.png');
+    }
+    
+    create() {
       // When gameState.active is true, the game is being played and not over. When gameState.active is false, then it's game over
       gameState.active = true;
   
@@ -123,11 +104,11 @@ function preload() {
         gameState.player.destroy();
         this.add.text(200, 265, `Your score is: ${table}`,{fontSize:'15px', fill:'#000000'});
         this.add.text(200, 250, 'You Lose', {fontSize:'15px', fill:'#000000'});
-    });
+      });
       
-  }
-  
-  function update() {
+    }
+
+    update() {
       if (gameState.active) {
       
           // If the game is active, then players can control Codey
@@ -167,8 +148,33 @@ function preload() {
                 })
               }
           }; 
+      }
     }
-  }
+ }
+       // Helper Methods below:
+  // sortedEnemies() returns an array of enemy sprites sorted by their x coordinate
+  function sortedEnemies(){
+    const orderedByXCoord = gameState.enemies.getChildren().sort((a, b) => a.x - b.x);
+    return orderedByXCoord;
+  };
+  // numOfTotalEnemies() returns the number of total enemies 
+  function numOfTotalEnemies() {
+      const totalEnemies = gameState.enemies.getChildren().length;
+    return totalEnemies;
+  };
+  
+  function createBug() {
+    const randomNum = Math.floor(Math.random()* 3);
+    let bugName;
+    if (randomNum === 0){
+        bugName = 'bug1';
+    }else if (randomNum === 1){
+        bugName = 'bug2';
+    }else{
+        bugName = 'bug3';
+    }
+    return bugName;
+  };
   
   const config = {
       type: Phaser.AUTO,
@@ -182,11 +188,7 @@ function preload() {
               enableBody: true,
           }
       },
-      scene: {
-          preload,
-          create,
-          update
-      }
+      scene: [GameScene]
   };
   
   
