@@ -12,7 +12,7 @@
               enableBody: true,
           }
       },
-      scene: [GameScene]
+      scene: [StartScene, GameScene]
   };
   
   
