@@ -20,7 +20,9 @@ class GameScene extends Phaser.Scene {
       // When gameState.active is false, the game will listen for a pointerup event and restart when the event happens
       this.input.on('pointerup', () => {
           if (gameState.active === false) {
-              this.scene.restart();
+              //this.scene.restart();
+              this.scene.stop('GameScene');
+              this.scene.start('EndScene');
           }
       })
   
