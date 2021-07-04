@@ -9,6 +9,7 @@ class GameScene extends Phaser.Scene {
     this.load.image('cave', 'https://content.codecademy.com/courses/learn-phaser/Cave%20Crisis/cave_background.png');
     this.load.image('platform', 'https://content.codecademy.com/courses/learn-phaser/Cave%20Crisis/platform.png');
     this.load.spritesheet('codey', 'https://content.codecademy.com/courses/learn-phaser/Cave%20Crisis/codey_sprite.png', { frameWidth: 72, frameHeight: 90 });
+    this.load.spritesheet('snowman', 'https://content.codecademy.com/courses/learn-phaser/Cave%20Crisis/snowman.png', { frameWidth: 50, frameHeight: 70 });
   }
 
   create() {
@@ -45,7 +46,24 @@ class GameScene extends Phaser.Scene {
       frameRate: 5,
       repeat: -1
     });
+
+    //Creates a Snowman sprite
+    gameState.enemy = this.physics.add.sprite(225, 500, 'snowman');
+    
+    this.physics.add.collider(gameState.enemy, platforms);
+
+    this.anims.create({
+      key: 'snowmanAlert',
+      frames: this.anims.generateFrameNumbers('snowman',{start: 0, end: 3}),
+      frameRate: 4,
+      repeat: -1
+    });
+    gameState.enemy.anims.play('snowmanAlert', true);
+    this.physics.add.overlap(gameState.player, gameState.enemy, () => {
+			//gameState.enemy.anims.pause();
+      this.anims.pauseAll();
   }
+}
 
   update() {
     if (gameState.active) {
