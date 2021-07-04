@@ -61,9 +61,9 @@ class GameScene extends Phaser.Scene {
     gameState.enemy.anims.play('snowmanAlert', true);
     this.physics.add.overlap(gameState.player, gameState.enemy, () => {
 			//gameState.enemy.anims.pause();
-      this.anims.pauseAll();
+      this.anims.pauseAll();   
+    });
   }
-}
 
   update() {
     if (gameState.active) {
