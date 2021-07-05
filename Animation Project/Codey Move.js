@@ -10,6 +10,7 @@ class GameScene extends Phaser.Scene {
     this.load.image('platform', 'https://content.codecademy.com/courses/learn-phaser/Cave%20Crisis/platform.png');
     this.load.spritesheet('codey', 'https://content.codecademy.com/courses/learn-phaser/Cave%20Crisis/codey_sprite.png', { frameWidth: 72, frameHeight: 90 });
     this.load.spritesheet('snowman', 'https://content.codecademy.com/courses/learn-phaser/Cave%20Crisis/snowman.png', { frameWidth: 50, frameHeight: 70 });
+    this.load.spritesheet('exit', 'https://content.codecademy.com/courses/learn-phaser/Cave%20Crisis/cave_exit.png', { frameWidth: 60, frameHeight: 70 })
   }
 
   create() {
@@ -48,7 +49,7 @@ class GameScene extends Phaser.Scene {
     });
 
     //Creates a Snowman sprite
-    gameState.enemy = this.physics.add.sprite(225, 500, 'snowman');
+    gameState.enemy = this.physics.add.sprite(480, 300, 'snowman');
     
     this.physics.add.collider(gameState.enemy, platforms);
 
@@ -58,10 +59,57 @@ class GameScene extends Phaser.Scene {
       frameRate: 4,
       repeat: -1
     });
+    
     gameState.enemy.anims.play('snowmanAlert', true);
+
     this.physics.add.overlap(gameState.player, gameState.enemy, () => {
+      this.add.text(150, 50, '      Game Over...\n  Click to play again.', { fontSize: 36, color: '#ffffff' });
+      this.physics.pause();
 			//gameState.enemy.anims.pause();
-      this.anims.pauseAll();   
+      gameState.active = false;
+      this.anims.pauseAll();
+      gameState.enemy.move.stop();
+      
+
+      this.input.on('pointerup', () => {
+        this.anims.resumeAll();
+        this.scene.restart();
+      })
+    });
+
+    gameState.exit = this.physics.add.sprite(50, 142, 'exit');
+    this.anims.create({
+      key: 'glow',
+      frames: this.anims.generateFrameNumbers('exit', { start: 0, end: 5 }),
+      frameRate: 4,
+      repeat: -1
+    });
+    this.physics.add.collider(gameState.exit, platforms);
+    gameState.exit.anims.play('glow', true);
+
+    this.physics.add.overlap(gameState.player, gameState.exit, () => {
+      this.add.text(150, 50, 'You reached the exit!\n  Click to play again.', {fontSize: 36, color: '#ffffff' });
+      this.physics.pause();
+      gameState.active = false;
+      this.anims.pauseAll();
+      // To stop enemy animation
+      gameState.enemy.move.stop();
+    
+      this.input.on('pointerup', () => {
+        this.anims.resumeAll();
+        this.scene.restart();
+      })
+  })
+
+    
+
+    gameState.enemy.move = this.tweens.add({
+      targets: gameState.enemy,
+      x: 320,
+      ease: 'Linear',
+      duration: 1800,
+      repeat: -1,
+      yoyo: true
     });
   }
 
@@ -83,6 +131,10 @@ class GameScene extends Phaser.Scene {
         gameState.player.setVelocityX(0);
         // Plays the idle animation if no arrow keys are pressed
         gameState.player.anims.play('idle', true);
+      }
+      if ((gameState.cursors.space.isDown || gameState.cursors.up.isDown)&& gameState.player.body.touching.down) {
+        gameState.player.anims.play('jump', true);
+        gameState.player.setVelocityY(-800);
       }
     }
   }
