@@ -109,8 +109,18 @@ class GameScene extends Phaser.Scene {
       ease: 'Linear',
       duration: 1800,
       repeat: -1,
-      yoyo: true
+      yoyo: true,
+      onRepeat: growsnowman
     });
+
+    let scaleChange = 1.1;
+    function growsnowman(){
+      if(scaleChange < 4){
+        scaleChange += .3;
+        gameState.enemy.setScale(scaleChange);
+        gameState.enemy.y -= 15;
+      }
+    }
   }
 
   update() {
