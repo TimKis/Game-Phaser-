@@ -41,7 +41,7 @@ class EndScene extends Phaser.Scene {
   
         // Add logic to transition from EndScene 
         this.scene.stop('EndScene');
-        this.scene.play('GameScene');
+        this.scene.start('GameScene');
               
       })
     }

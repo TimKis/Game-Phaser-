@@ -27,17 +27,36 @@ class GameScene extends Phaser.Scene {
         currentCircle.setInteractive();
   
         // Add the code for tweens below:
-              this.tweens.add({
+        this.tweens.add({
           targets: currentCircle,
           paused: false,
           completeDelay: 300,
           onComplete: function(){
             currentCircle.fillAlpha = 1;
             gameState.textAlert.setText("");
-            gameState.score.setText(`Correct: ${gameState.correct}\n
-                                     Incorrect: ${gameState.incorrect}`);
+            gameState.score.setText(`Correct: ${gameState.correct}\n Incorrect: ${gameState.incorrect}`);
+            currentCircle.on('pointerup', () => {
+              if(currentCircle.number === gameState.counter){
+                gameState.counter = gameState.counter + 1;
+                gameState.correct = gameState.correct + 1;
+                currentCircle.destroy();
+              } else {
+                gameState.incorrect = gameState.incorrect + 1;
+              }
+              gameState.score.setText(`Correct: ${gameState.correct}\n Incorrect: ${gameState.incorrect}`);
+              currentCircle.wrongTween.restart();
+            });  
           }
-        })
+        });
+
+        currentCircle.wrongTween = this.tweens.add({
+          targets: currentCircle,
+          paused: true,
+          scaleX: 1.5,
+          scaleY: 1.5,
+          yoyo: true,
+          duraction: 150
+        });
         
         
       }
@@ -51,8 +70,8 @@ class GameScene extends Phaser.Scene {
     update() {
       if (gameState.circles.getChildren().length === 0) {
         // Add logic to transition from GameScene to EndScene
-              this.scene.stop('GameScene');
-        this.scene.start('EndScene');
+          this.scene.stop('GameScene');
+          this.scene.start('EndScene');
               
       }
     }
