@@ -1,9 +1,4 @@
 class Level extends Phaser.Scene {
-    createSnow() {
-      // Add in the particle emitters here!
-  
-    }
-  
     constructor(key) {
       super(key);
       this.levelKey = key
@@ -89,6 +84,22 @@ class Level extends Phaser.Scene {
         frameRate: 10,
         repeat: -1
       })
+    }
+
+    createSnow(){
+      gameState.particles = this.add.particles('snowflake');
+
+      gameState.emitter = gameState.particles.createEmitter({
+        x: {min: 0, max: config.width * 2 },
+        y: -5,
+        lifespan: 2000,
+        speedX: { min:-5, max: -200 },
+        speedY: { min: 200, max: 400 },
+        scale: { start: 0.6, end: 0 },
+        quantity: 10,
+        blendMode: 'ADD'
+        });
+      gameState.emitter.setScrollFactor(0);
     }
   
     createParallaxBackgrounds() {
