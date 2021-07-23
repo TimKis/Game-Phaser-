@@ -26,6 +26,8 @@ class JumpScene extends Phaser.Scene {
   }
 
   create() {
+    
+    particles = this.add.particles('stripe');
 
     const graphics  = this.add.graphics();
     graphics.fillGradientStyle(0xdadaff, 0x6cfafa, 0xedcfe3, 0xdadaff, 1);
@@ -79,6 +81,7 @@ class JumpScene extends Phaser.Scene {
 
     if (player.body.touching.down) {
       player.setVelocityY(-500);
+      this.cameras.main.shake(200, .002);
     }
 
 
@@ -86,6 +89,17 @@ class JumpScene extends Phaser.Scene {
     // This can be done by moving the camera but can also be done by moving the world around the player
     if (player.body.y <  gameOptions.height/2) {
       platforms.children.iterate(updateY, this);
+    }
+    if(platformCount > 2 && !emitter){
+      emitter = particles.createEmitter({                                                                                   
+        x: { min: 0, max: gameOptions.width },                                                                              
+        y: gameOptions.height + 10,                                                                                         
+        lifespan: 2500,                                                                                                     
+        speedY: { min: -300, max: -500 },                                                                                   
+        scale: .5,                                                                                                          
+        quantity: 5,                                                                                                        
+        blendMode: 'ADD'                                                                                                    
+      }); 
     }
   }
 }
