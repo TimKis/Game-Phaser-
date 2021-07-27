@@ -7,7 +7,9 @@ const gameState = {
   gameSpeed: 3,
   currentMusic: {},
   totalWaveCount: 3,
-  countdownTimer: 1500
+  countdownTimer: 1500,
+  readyForNextOrder: true,
+  customersServedCount: 0
 }
 
 // Gameplay scene
@@ -113,7 +115,28 @@ class GameScene extends Phaser.Scene {
   }
 
   update() {
-    
+    if(gameState.readyForNextOrder){
+      gameState.readyForNextOrder = false;
+      gameState.customerIsReady = false;
+      gameState.currentCustomer = gameState.customers.children.entries[gameState.customersServedCount];
+      this.tweens.add({
+        targets: gameState.currentCustomer,
+        x: gameState.player.x,
+        ease: 'Power2',
+        duration: 1000,
+        delay: 100,
+        angle: 90,
+        onComplete: function(){
+          gameState.customerIsReady = true;
+        }
+      });
+    }
+  };
+
+  updateCustomerCountText(){
+    gameState.customersLeftCount = gameState.totalCustomerCount - gameState.customersServedCount;
+    gameState.customerCountText.setText(`Customers left: ${gameState.customersLeftCount}`);
+    gameState.waveCountText.setText(gameState.currentWaveCount + '/' + gameState.totalWaveCount);
   }
 
   /* WAVES */
@@ -122,6 +145,7 @@ class GameScene extends Phaser.Scene {
     // Add the total number of customers per wave here:
     gameState.totalCustomerCount = Math.ceil(gameState.currentWaveCount * Math.random() * 10);
 
+    this.updateCustomerCountText();
 
     for (let i = 0; i < gameState.totalCustomerCount; i++) {
       // Create your container below and add your customers to it below:
