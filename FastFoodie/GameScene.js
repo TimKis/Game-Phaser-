@@ -115,6 +115,46 @@ class GameScene extends Phaser.Scene {
     gameState.currentMeal = this.add.group();
     gameState.currentMeal.fullnessValue = 0;
 
+    // Add buttons 
+    gameState.keys.Enter = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
+    gameState.keys.A = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+    gameState.keys.S = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+    gameState.keys.D = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+  }
+
+  placeFood(food, fullnessValue){
+    if(gameState.currentMeal.children.entries.length < 3 && gameState.customerIsReady){
+      gameState.sfx.placeFood.play();
+      
+      let Xposition = gameState.tray.x;
+      switch (gameState.currentMeal.children.entries.length) {
+        case 0:
+          Xposition -= 90;
+          break;
+        case 2:
+          Xposition += 90;
+          break;
+      };
+      gameState.currentMeal.create(Xposition, gameState.tray.y, food).setScale(0.5);
+      gameState.currentMeal.fullnessValue += fullnessValue;
+
+      for (let i = 0; i < gameState.currentMeal.fullnessValue; i++) {
+        if (i < gameState.currentCustomer.fullnessCapacity) {
+          if (gameState.currentCustomer.fullnessCapacity === gameState.currentMeal.fullnessValue) {
+            // If exactly full, show a positive color
+            gameState.currentCustomer.fullnessMeterBlocks[i].setFillStyle(0x3ADB40);
+            gameState.currentCustomer.fullnessMeterBlocks[i].setStrokeStyle(2, 0x2EB94E);
+          } else if (gameState.currentMeal.fullnessValue > gameState.currentCustomer.fullnessCapacity) {
+            // If more food full, turn red
+            gameState.currentCustomer.fullnessMeterBlocks[i].setFillStyle(0xDB533A);
+            gameState.currentCustomer.fullnessMeterBlocks[i].setStrokeStyle(2, 0xB92E2E);
+          } else {
+            // Otherwise, slight color change
+            gameState.currentCustomer.fullnessMeterBlocks[i].setFillStyle(0xFFFA81);
+          }
+        }
+      }
+    }
   }
 
   update() {
@@ -134,6 +174,15 @@ class GameScene extends Phaser.Scene {
           gameState.currentCustomer.meterContainer.visible = true;
         }
       });
+    }
+    if(Phaser.Input.Keyboard.JustDown(gameState.keys.A)){
+      this.placeFood('Burger', 5);
+    }
+    if(Phaser.Input.Keyboard.JustDown(gameState.keys.S)){
+      this.placeFood('Fries', 3);
+    }
+    if(Phaser.Input.Keyboard.JustDown(gameState.keys.D)){
+      this.placeFood('Shake', 1);
     }
   };
 
