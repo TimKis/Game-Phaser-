@@ -161,6 +161,18 @@ class GameScene extends Phaser.Scene {
     if(gameState.readyForNextOrder){
       gameState.readyForNextOrder = false;
       gameState.customerIsReady = false;
+
+      for (let i = 0; i < gameState.customersServedCount; i++) {
+        gameState.previousCustomer = gameState.customers.children.entries[i];
+        this.tweens.add({
+          targets: gameState.previousCustomer,
+          x: '-=300',
+          angle: 0,
+          duration: 750,
+          ease: 'Power2'
+        });
+      };
+
       gameState.currentCustomer = gameState.customers.children.entries[gameState.customersServedCount];
       this.tweens.add({
         targets: gameState.currentCustomer,
@@ -183,6 +195,13 @@ class GameScene extends Phaser.Scene {
     }
     if(Phaser.Input.Keyboard.JustDown(gameState.keys.D)){
       this.placeFood('Shake', 1);
+    }
+    if(Phaser.Input.Keyboard.JustDown(gameState.keys.Enter)){
+      if(!gameState.readyForNextOrder && gameState.customerisReady){
+        gameState.serviceCountdown.remove();
+        this.moveCustomerLine();
+        this.updateCustomerCountText();
+      }
     }
   };
 
